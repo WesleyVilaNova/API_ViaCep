@@ -8,17 +8,18 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.apicorreioskotlin.R
+import com.example.apicorreioskotlin.ui.interfaces.InterfacePresenter
 import com.example.apicorreioskotlin.ui.models.ModelConsult
-import com.example.apicorreioskotlin.ui.repository.RetrofitConfig
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.example.apicorreioskotlin.ui.presenter.PresenterAPI as PresenterAPI1
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), InterfacePresenter.ContratoView {
 
-    private lateinit var btn_consultar : Button
-    private lateinit var editText_pesquisar : EditText
+    private lateinit var btn_consultar: Button
+    public lateinit var editText_pesquisar: EditText
     private lateinit var textView: TextView
+    var string : String = ""
+
+    var view: InterfacePresenter.ObtendoPacote = PresenterAPI1(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
         iniciandoComponentes()
         chamandoRetrofit()
-
+        viewApi(string)
     }
 
     private fun iniciandoComponentes() {
@@ -37,63 +38,54 @@ class MainActivity : AppCompatActivity() {
 
     private fun chamandoRetrofit() {
         btn_consultar.setOnClickListener {
-            val call : Call<ModelConsult?>? = RetrofitConfig()
-                .getService
-                .buscarCEP(editText_pesquisar.text.toString())
-
-            call?.enqueue(object : Callback<ModelConsult?>{
-                override fun onResponse(
-                    call: Call<ModelConsult?>,
-                    response: Response<ModelConsult?>
-                ) {
-                    if (response.isSuccessful){
-                        var model : ModelConsult? = response.body()
-                            textView.setText(model?.TextExibicao())
-                            Log.i("Infor","Informação" + response.message())
-                            editText_pesquisar.setText("")
-
-                    }
-                }
-
-                override fun onFailure(call: Call<ModelConsult?>, t: Throwable) {
-                    Log.e("TAG", "****************$t")
-                    Toast.makeText(this@MainActivity,"***********************",Toast.LENGTH_LONG)
-                }
-
-
-            })
-
-
+            if (editText_pesquisar.length() == 0){
+                editText_pesquisar.setError("Cep inválido")
+            }else{
+                Log.i("TAG" , "Vai consultar a API no presenter")
+                view.obtemAPI()
+            }
         }
-
-
-
-
     }
 
     override fun onStart() {
         super.onStart()
-        Toast.makeText(this,"OnStart",Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "OnStart", Toast.LENGTH_LONG).show()
     }
 
     override fun onResume() {
         super.onResume()
-        Toast.makeText(this,"onResume", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "onResume", Toast.LENGTH_LONG).show()
     }
 
     override fun onPause() {
         super.onPause()
-        Toast.makeText(this,"onPause", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "onPause", Toast.LENGTH_LONG).show()
     }
 
     override fun onStop() {
         super.onStop()
-        Toast.makeText(this,"onStop", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "onStop", Toast.LENGTH_LONG).show()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Toast.makeText(this,"onDestroy", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "onDestroy", Toast.LENGTH_LONG).show()
+    }
+
+    override fun editText(editText: EditText?): String? {
+        Log.i("TAG" , "Chegou do presente para pegar o EditText")
+        return editText_pesquisar.text.toString()
+
+
+    }
+
+    override fun viewApi(textoCep: String) {
+        Log.i("TAG" , "chegou a resposta do response na activity")
+        return textView.setText(textoCep)
+    }
+
+    override fun mostrarError() {
+        Toast.makeText(this,"Ocorreu um error ao pesquisar",Toast.LENGTH_LONG).show()
     }
 
 

@@ -1,8 +1,13 @@
 package com.example.apicorreioskotlin.ui.models
 
+import com.squareup.moshi.Json
+
 data class ModelConsult(
     val cep : String,
+
+    @Json (name = "logradouro")
     val logradouro : String,
+
     val complemento : String,
     val bairro : String,
     val localidade : String,
@@ -18,7 +23,7 @@ data class ModelConsult(
                 "Seu CEP de consulta: $cep\n" +
                 "\n"+
                 "\n"+
-                "Testando API\n100% Kotlin"
+                "Testando API com MVP \n100% Kotlin"
     }
 }
 
