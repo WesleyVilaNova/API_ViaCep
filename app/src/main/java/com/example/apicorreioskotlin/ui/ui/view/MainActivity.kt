@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity(), InterfacePresenter.ContratoView {
     private lateinit var btn_consultar: Button
     public lateinit var editText_pesquisar: EditText
     private lateinit var textView: TextView
-    var string : String = ""
+    var string: String = ""
 
     var view: InterfacePresenter.ObtendoPacote = PresenterAPI1(this)
 
@@ -38,10 +38,10 @@ class MainActivity : AppCompatActivity(), InterfacePresenter.ContratoView {
 
     private fun chamandoRetrofit() {
         btn_consultar.setOnClickListener {
-            if (editText_pesquisar.length() == 0){
+            if (editText_pesquisar.length() == 0) {
                 editText_pesquisar.setError("Cep inválido")
-            }else{
-                Log.i("TAG" , "Vai consultar a API no presenter")
+            } else {
+                Log.i("TAG", "Vai consultar a API no presenter")
                 view.obtemAPI()
             }
         }
@@ -73,19 +73,17 @@ class MainActivity : AppCompatActivity(), InterfacePresenter.ContratoView {
     }
 
     override fun editText(editText: EditText?): String? {
-        Log.i("TAG" , "Chegou do presente para pegar o EditText")
+        Log.i("TAG", "Chegou do presente para pegar o EditText")
         return editText_pesquisar.text.toString()
-
-
     }
 
     override fun viewApi(textoCep: String) {
-        Log.i("TAG" , "chegou a resposta do response na activity")
+        Log.i("TAG", "chegou a resposta do response na activity")
         return textView.setText(textoCep)
     }
 
     override fun mostrarError() {
-        Toast.makeText(this,"Ocorreu um error ao pesquisar",Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "Ocorreu um error ao pesquisar", Toast.LENGTH_LONG).show()
     }
 
 
